@@ -6,18 +6,16 @@ package com.bycorp.clientesgestion;
 
 import com.bycorp.dao.ClientesDAO;
 import com.bycorp.models.Cliente;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 
 /**
  *
  * @author HP
  */
 public class ventana extends javax.swing.JFrame {
-
-    List<Cliente> lista = new ArrayList<>();
 
     /**
      * Creates new form ventana
@@ -26,6 +24,7 @@ public class ventana extends javax.swing.JFrame {
         initComponents();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        actualizarLista();
     }
 
     /**
@@ -78,12 +77,6 @@ public class ventana extends javax.swing.JFrame {
         nom.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         nom.setText("Nombre: ");
         panel.add(nom, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, -1, -1));
-
-        txtNombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombreActionPerformed(evt);
-            }
-        });
         panel.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(326, 80, 235, -1));
 
         ape.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
@@ -141,16 +134,13 @@ public class ventana extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_listClientesMouseClicked
 
-    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNombreActionPerformed
-
     private void eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarActionPerformed
-        int indice;
+        Cliente c = new Cliente();
+        
         if (!listClientes.isSelectionEmpty()) {
-            indice = listClientes.getSelectedIndex();
-            lista.remove(indice);
-            JOptionPane.showMessageDialog(null, "Eliminado!");
+            c =(Cliente) (Object) listClientes.getModel().getElementAt(listClientes.getSelectedIndex());
+            ClientesDAO dao = new ClientesDAO();
+            dao.eliminarCliente(c.getId());
             actualizarLista();
         }
     }//GEN-LAST:event_eliminarActionPerformed
@@ -166,7 +156,6 @@ public class ventana extends javax.swing.JFrame {
             ClientesDAO c = new ClientesDAO();
             c.insertarCliente(cliente);
 
-            lista.add(cliente);
             actualizarLista();
             limpiarCajasDeTexto();
         }
@@ -225,7 +214,10 @@ public class ventana extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void actualizarLista() {
+        ClientesDAO dao = new ClientesDAO();
+        List<Cliente> lista = dao.listarClientes();
         DefaultListModel datos = new DefaultListModel();
+        
         for (int i = 0; i < lista.size(); i++) {
             datos.addElement(lista.get(i));
         }

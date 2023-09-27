@@ -9,6 +9,15 @@ package com.bycorp.models;
  * @author HP
  */
 public class Cliente {
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
     private String nombre;
     private String apellido;
     private String email;
